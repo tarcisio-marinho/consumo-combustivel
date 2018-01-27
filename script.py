@@ -1,4 +1,4 @@
-import requests, json, time
+import requests, json, os
 
 def get_api_key():
     path = "key.txt"
@@ -6,8 +6,6 @@ def get_api_key():
         key = f.read()
         
     return key
-    
-
 
 def busca_dicionario(partida, destino, key):
     link = "https://maps.googleapis.com/maps/api/directions/json?origin={0}&destination={1}&key={2}&language=pt".format(partida, destino, key)
@@ -31,19 +29,22 @@ def calculo_api(preco_combustivel, km_litro_cidade, distancia):
 
 def get_percurso(dicionario):
     percurso = (dicionario["routes"][0]["legs"][0]["steps"])
+    print("-----------------------------------MELHOR TRAJETO---------------------------------------------------")
     for i in percurso: 
         print(i["html_instructions"].replace("<b>","").replace("</b>", "").replace('<div style="font-size:0.9em">', "").replace("</div>",""))
         
 
 if __name__== "__main__":
-    preco_combustivel = 3.99
-    km_litro_cidade = 12
+
+    preco_combustivel = float(input("digite o preço do combustivel: "))
+    km_litro_cidade = float(input("digite a quantidade de km/ litro que seu carro faz:"))
     key = get_api_key()
-    partida = "rua josé mario de oliveira, candeias, jaboatão dos guararapes"
-    destino = "walmart, candeias jaboatão dos guararapes"
+    partida = input("informe o ponto de partida: ")
+    destino = input("informe o ponto o destino: ")
+    os.system("clear")
     dicionario = busca_dicionario(partida,destino,key)
     distancia = requests_api(dicionario)
-    print("distancia do trajeto:", distancia)
+    print("distancia do trajeto em KM:", distancia)
     calculo_api(preco_combustivel, km_litro_cidade, distancia)
     get_percurso(dicionario)
 
