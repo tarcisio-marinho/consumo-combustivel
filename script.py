@@ -1,10 +1,14 @@
+#!/usr/bin/env python3
 import requests, json, os
 
 def get_api_key():
     path = "key.txt"
-    with open(path) as f:
-        key = f.read()
-        
+    try:
+        with open(path) as f:
+            key = f.read()
+    except FileNotFoundError:
+        print("create key.txt on your directory with the key")
+        exit(-1)
     return key
 
 def busca_dicionario(partida, destino, key):
@@ -29,7 +33,7 @@ def calculo_api(preco_combustivel, km_litro_cidade, distancia):
 
 def get_percurso(dicionario):
     percurso = (dicionario["routes"][0]["legs"][0]["steps"])
-    print("-----------------------------------MELHOR TRAJETO---------------------------------------------------")
+    print("Melhor trajeto:\n")
     for i in percurso: 
         print(i["html_instructions"].replace("<b>","").replace("</b>", "").replace('<div style="font-size:0.9em">', "").replace("</div>",""))
         
